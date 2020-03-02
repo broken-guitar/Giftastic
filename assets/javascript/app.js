@@ -1,0 +1,6 @@
+// VARIABLES
+var myApiKey = "y5fd6BmElSM3UPPatTgJh0kmpD3Ug60X"
+
+// FUNCTIONS
+
+// INITIALIZE
