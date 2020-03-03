@@ -36,5 +36,10 @@ $("#main-container").on("click", ".btn", function () {
     }).then(function (response) {
         // do stuff after getting back response 
         console.log(response);
+        console.log(response.data[0].url)
+        for (gif of response.data) {
+            console.log("test: ", gif.url);
+        }
+
     });
 });
