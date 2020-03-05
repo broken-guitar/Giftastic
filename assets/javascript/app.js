@@ -11,29 +11,24 @@ function makeButtons() {
     // create a button for each string in topic array
     for (topic of arrTopics) {
         $buttonSection.append($("<button>").attr({
-            class: "btn btn-lg btn-primary px-3 m-2",
+            class: "gif-btn btn btn-lg btn-primary px-3 m-2",
             id: arrTopics.indexOf(topic)
         }).text(topic));
     }
 }
 
-
-// INITIALIZE
-// $(function () {
-//     $('[data-toggle="tooltip"]').tooltip()
-// })
-
-makeButtons();
-
-$("#main-container").on("click", ".btn", function () {
-
-    let $buttonText = $(this).text();
-
+function getGifs(searchTerm) {
+    let dynamicRating = "g";
+    if (searchTerm == "bunny") {
+        dynamicRating = "pg-13";
+    } else {
+        dynamicRating = "g";
+    };
     let queryURL =
-        "http://api.giphy.com/v1/gifs/search?q=" + $buttonText +
+        "http://api.giphy.com/v1/gifs/search?q=" + searchTerm +
         "&api_key=" + myApiKey +
+        "&rating=" + dynamicRating +
         "&limit=5";
-
     $.ajax({
         url: queryURL,
         method: "GET"
@@ -56,16 +51,39 @@ $("#main-container").on("click", ".btn", function () {
                 "title": gif.rating
             });
 
-            $gifWrapper.append($("<p>").attr("class", "pb-1").text("Rating: " + gif.rating));
+            $gifWrapper.append($("<p>").attr("class", "pb-1").text("Rating: " + gif.rating.toUpperCase()));
             $gifWrapper.append($img);
             $gifSection.prepend($gifWrapper);
         }
     });
+}
+
+function addButton(newButtonText) {
+
+    $buttonSection.append($("<button>").attr({
+        class: "gif-btn btn btn-lg btn-primary px-3 m-2",
+        id: "added-" + newButtonText + Date().toString()
+    }).text(newButtonText));
+
+};
+// INITIALIZE
+// $(function () {
+//     $('[data-toggle="tooltip"]').tooltip()
+// })
+
+makeButtons();
+
+$("#main-container").on("click", ".gif-btn", function () {
+
+    let buttonText = $(this).text();
+
+    getGifs(buttonText)
+
 });
 
-$("#gif-container").on("click", ".gif", function () {
+$("#gif-container").on("click", ".gif", function (event) {
+    event.preventDefault();
     let state = $(this).attr("data-state");
-
     if (state === "still") {
         $(this).attr("src", $(this).attr("data-animate-url"));
         $(this).attr("data-state", "animated");
@@ -74,4 +92,17 @@ $("#gif-container").on("click", ".gif", function () {
         $(this).attr("data-state", "still");
     }
 
+});
+
+$("#add-button").on("click", function (event) {
+    event.preventDefault();
+    console.log("add-button was clicked");
+    let inputText = $("#input-topic").val().trim();
+    if (inputText == null || inputText == "") {
+        // console.log("empty! ", inputText)
+    } else {
+        // console.log("not empty: ", inputText)
+
+        addButton(inputText);
+    }
 });
