@@ -1,7 +1,7 @@
 // VARIABLES
 
 var myApiKey = "y5fd6BmElSM3UPPatTgJh0kmpD3Ug60X";
-var arrTopics = ["cat", "dog", "bunny", "bird"];
+var arrTopics = ["cat", "dog", "bunny", "bird", "social distancing"];
 const $buttonSection = $("#button-container");
 const $gifSection = $("#gif-container");
 
@@ -11,11 +11,18 @@ function makeButtons() {
     // create a button for each string in topic array
     for (topic of arrTopics) {
         $buttonSection.append($("<button>").attr({
-            class: "gif-btn btn btn-lg btn-primary px-3 m-2",
+            class: "gif-btn btn btn-lg btn-outline-light px-3 m-2",
             id: arrTopics.indexOf(topic)
         }).text(topic));
     }
 }
+
+function addButton(newButtonText) {
+    $buttonSection.append($("<button>").attr({
+        class: "gif-btn btn btn-lg btn-outline-light px-3 m-2",
+        id: "added-" + newButtonText + Date().toString()
+    }).text(newButtonText));
+};
 
 function getGifs(searchTerm) {
     let dynamicRating = "g";
@@ -33,7 +40,6 @@ function getGifs(searchTerm) {
         url: queryURL,
         method: "GET"
     }).then(function (response) {
-        console.log(response);
         // do stuff after getting back response 
         for (gif of response.data) {
             let $gifWrapper = $("<div>").attr({
@@ -58,18 +64,8 @@ function getGifs(searchTerm) {
     });
 }
 
-function addButton(newButtonText) {
 
-    $buttonSection.append($("<button>").attr({
-        class: "gif-btn btn btn-lg btn-primary px-3 m-2",
-        id: "added-" + newButtonText + Date().toString()
-    }).text(newButtonText));
-
-};
 // INITIALIZE
-// $(function () {
-//     $('[data-toggle="tooltip"]').tooltip()
-// })
 
 makeButtons();
 
@@ -96,7 +92,7 @@ $("#gif-container").on("click", ".gif", function (event) {
 
 $("#add-button").on("click", function (event) {
     event.preventDefault();
-    console.log("add-button was clicked");
+    // console.log("add-button was clicked");
     let inputText = $("#input-topic").val().trim();
     if (inputText == null || inputText == "") {
         // console.log("empty! ", inputText)
@@ -104,5 +100,6 @@ $("#add-button").on("click", function (event) {
         // console.log("not empty: ", inputText)
 
         addButton(inputText);
+        $("#input-topic").val("");
     }
 });
